@@ -7,13 +7,15 @@ Feel free to have a look around! (We've commented the code so you can see what
 everything does.)
 */
 
+'use strict';
+
 /*
 Returns an object that defines the behaviour of the Python editor. The editor
 is attached to the div with the referenced id.
 */
 function pythonEditor(id) {
     // An object that encapsulates the behaviour of the editor.
-    editor = {};
+    var editor = {};
 
     // Represents the ACE based editor.
     var ACE = ace.edit(id);  // The editor is in the tag with the referenced id.
@@ -81,7 +83,7 @@ function pythonEditor(id) {
             return result;
         }
         // add header, pad to multiple of 16 bytes
-        data = new Uint8Array(4 + script.length + (16 - (4 + script.length) % 16));
+        var data = new Uint8Array(4 + script.length + (16 - (4 + script.length) % 16));
         data[0] = 77; // 'M'
         data[1] = 80; // 'P'
         data[2] = script.length & 0xff;
@@ -176,6 +178,7 @@ the editor to the DOM (web-page).
 See the comments in-line for more information.
 */
 function web_editor(config) {
+    var EDITOR = null;
 
     // Indicates if there are unsaved changes to the content of the editor.
     var dirty = false;
@@ -359,14 +362,14 @@ function web_editor(config) {
         if(blockly.is(':visible')) {
             dirty = false;
             blockly.hide();
-            editor.ACE.setReadOnly(false);
+            EDITOR.ACE.setReadOnly(false);
         } else {
             if(dirty) {
                 if(!confirm(config.translate.confirms.blocks)) {
                     return;
                 }
             }
-            editor.ACE.setReadOnly(true);
+            EDITOR.ACE.setReadOnly(true);
             blockly.show();
             blockly.css('width', '33%');
             blockly.css('height', '100%');
